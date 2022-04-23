@@ -4,9 +4,9 @@ const request = require('request');
 const rp = require('request-promise');
 
 const kakao = {
-    clientid: '6c9c16d27b420108ed23421696dfba3b', //REST API
-    clientSecret: 'xL9jrO7CxPRbKAv4swgtguyGuQJOmuyD', //SECRET KEY
-    redirectUri: 'http://localhost:3000/user/kakaoLogin'
+    clientid: '', //REST API
+    clientSecret: '', //SECRET KEY
+    redirectUri: ''
 }
 // kakao login page URL
 router.get('/kakao',(req,res)=>{
