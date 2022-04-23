@@ -3,7 +3,7 @@ const User = require("../schemas/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const authMiddleWare = require("../middleware/authMiddleWare");
-const{ KEY } = process.env;
+const{ KEY } = process.env.KEY;
 const dotenv = require("dotenv").config();
 const router = express.Router();
 

@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const request = require('request');
+const dotenv = require("dotenv").config();
 const rp = require('request-promise');
 
 const kakao = {
-    clientid: '', //REST API
-    clientSecret: '', //SECRET KEY
-    redirectUri: ''
+    clientid: `${process.env.clientid}`, //REST API
+    redirectUri	: 'http://localhost:3000/user/kakaoLogin'
 }
 // kakao login page URL
 router.get('/kakao',(req,res)=>{
@@ -32,19 +32,19 @@ router.get('/kakaoLogin', async (req,res) => {
         json: true
     }
    const token = await rp(options);
-//    const access_token = token.access_token
-//    const access_token = token.access_token
-   console.log('access_token-->', token)
-
-   res.status(200).send({
-        token
-   });
+//    console.log('token', token)
+   const options1 = {
+        url : "https://kapi.kakao.com/v1/user/access_token_info",
+        method : 'GET',
+        headers: {
+            Authorization: `Bearer ${token.access_token}`
+        },
+        json: true
+    }
+    const userInfo = await rp(options1);
+    console.log('userInfo->', userInfo)
 });
 
-router.post('kakaoLogCheck', (req,res) => {
-    const { token } = res.locals;
-    console
-})
 
 
 
