@@ -19,10 +19,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/user', [usersRouter, resisterRouter, kakaoRouter]);
 
 
-app.get("/", async (req, res) => {
-  console.log("main_page")    
-  res.sendFile(__dirname + "/index.html");
-});
+//app.get("/", async (req, res) => {
+//  console.log("main_page")    
+ // res.sendFile(__dirname + "/index.html");
+//});
 
 
 
