@@ -8,7 +8,7 @@ const dotenv = require("dotenv").config();
 const router = express.Router();
 
 
-// login
+// login page
 router.post("/login", async (req, res) => {
     console.log('login api');
     const{ userId, userPw } = req.body;
