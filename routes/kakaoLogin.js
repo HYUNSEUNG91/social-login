@@ -11,7 +11,7 @@ const kakao = {
     redirectUri	: 'http://3.36.75.6/main'
 }
 // kakao login page URL
-router.get('/kakao',(req,res)=>{
+router.get('/kakaoLogin',(req,res)=>{
     const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakao.clientid}&redirect_uri=${kakao.redirectUri}`
     res.redirect(kakaoAuthURL);
 });
