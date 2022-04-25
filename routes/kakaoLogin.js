@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const{ KEY } = process.env.KEY;
+// const{ clientid } = process.env.clientid;
 const dotenv = require("dotenv").config();
 const rp = require('request-promise');
 const User = require("../schemas/user");
@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 
 
 const kakao = {
-    clientid: `${process.env.clientid}`, //REST API
+    clientid: `${process.env.CLIENTID}`, //REST API
     redirectUri	: 'http://localhost:3000/user/kakaoLogin'
 }
 // kakao login page URL
@@ -55,9 +55,9 @@ router.get('/kakaoLogin', async (req,res) => {
     const existUser = await User.find({userId});
     console.log('existUser-->', existUser)
 
-    if(existUser.lengh < 1){
+    if(!existUser.length){
         const from = 'kakao'
-        const user = new User({ userId, userNick, from})
+        const user = new User({ userId, userNick, from })
         console.log('user-->',user);
         await user.save();
     }
