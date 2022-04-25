@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const request = require('request');
+const{ KEY } = process.env.KEY;
 const dotenv = require("dotenv").config();
 const rp = require('request-promise');
 const User = require("../schemas/user");
+const jwt = require("jsonwebtoken");
 
 
 const kakao = {
@@ -16,6 +17,7 @@ router.get('/kakao',(req,res)=>{
     res.redirect(kakaoAuthURL);
 });
 
+// kakao register
 router.get('/kakaoLogin', async (req,res) => {
     const { code } = req.query;
     // console.log('code-->' , code);
@@ -33,13 +35,13 @@ router.get('/kakaoLogin', async (req,res) => {
         },
         json: true
     }
-   const token = await rp(options);
+   const kakaotoken = await rp(options);
 //    console.log('token', token)
    const options1 = {
         url : "https://kapi.kakao.com/v2/user/me",
         method : 'GET',
         headers: {
-            Authorization: `Bearer ${token.access_token}`,
+            Authorization: `Bearer ${kakaotoken.access_token}`,
             'Content-type' : 'application/x-www-form-urlencoded;charset=utf-8'
         },
         json: true
@@ -50,10 +52,24 @@ router.get('/kakaoLogin', async (req,res) => {
     const userNick = userInfo.kakao_account.profile.nickname;
     // console.log('userId-->',userId);
     // console.log('userNick-->',userNick);
-    const from = 'kakao'
-    const user = new User({ userId, userNick, from})
-    console.log('user-->',user);
-    await user.save();
+    const existUser = await User.find({userId});
+
+    if(!existUser){
+        const from = 'kakao'
+        const user = new User({ userId, userNick, from})
+        console.log('user-->',user);
+        await user.save();
+    }
+
+    const loginUser = await User.find({userId});
+    console.log('loginUser-->', loginUser)
+    const token = jwt.sign({ userId : loginUser.userId }, `${process.env.KEY}`);
+    res.status(200).send({
+        token,
+        // userId,
+        // userNick
+    });
+    console.log('User-->' , token, userId, userNick)
 
 });
 
