@@ -28,6 +28,7 @@ router.post("/login", async (req, res) => {
     };
 
     const token = jwt.sign({ userId : user.userId }, `${process.env.KEY}`);
+    // console.log('webtoken-->',token)
     res.status(200).send({
         token,
         userId,

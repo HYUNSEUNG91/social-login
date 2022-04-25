@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 
 const kakao = {
     clientid: `${process.env.CLIENTID}`, //REST API
-    redirectUri	: 'http://3.36.75.6/main'
+    redirectUri	: 'http://localhost3001/main'
 }
 // kakao login page URL
 router.get('/kakaoLogin',(req,res)=>{
@@ -64,10 +64,11 @@ router.get('/main', async (req,res) => {
     const loginUser = await User.find({userId});
     console.log('loginUser-->', loginUser)
     const token = jwt.sign({ userId : loginUser.userId }, `${process.env.KEY}`);
+    console.log('kakaotoken-->',token)
     res.status(200).send({
         token,
-        // userId,
-        // userNick
+        userId,
+        userNick
     });
     console.log('User-->' , token, userId, userNick)
 
