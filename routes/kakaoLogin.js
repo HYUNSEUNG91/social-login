@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 
 const kakao = {
     clientid: `${process.env.clientid}`, //REST API
-    redirectUri	: 'http://3.36.75.6/user/kakaoLogin'
+    redirectUri	: 'http://localhost:3000/user/kakaoLogin'
 }
 // kakao login page URL
 router.get('/kakao',(req,res)=>{
@@ -53,8 +53,9 @@ router.get('/kakaoLogin', async (req,res) => {
     // console.log('userId-->',userId);
     // console.log('userNick-->',userNick);
     const existUser = await User.find({userId});
+    console.log('existUser-->', existUser)
 
-    if(!existUser){
+    if(existUser.lengh < 1){
         const from = 'kakao'
         const user = new User({ userId, userNick, from})
         console.log('user-->',user);
