@@ -3,6 +3,8 @@ const router = express.Router();
 const request = require('request');
 const dotenv = require("dotenv").config();
 const rp = require('request-promise');
+const User = require("../schemas/user");
+
 
 const kakao = {
     clientid: `${process.env.clientid}`, //REST API
@@ -34,15 +36,25 @@ router.get('/kakaoLogin', async (req,res) => {
    const token = await rp(options);
 //    console.log('token', token)
    const options1 = {
-        url : "https://kapi.kakao.com/v1/user/access_token_info",
+        url : "https://kapi.kakao.com/v2/user/me",
         method : 'GET',
         headers: {
-            Authorization: `Bearer ${token.access_token}`
+            Authorization: `Bearer ${token.access_token}`,
+            'Content-type' : 'application/x-www-form-urlencoded;charset=utf-8'
         },
         json: true
     }
     const userInfo = await rp(options1);
-    console.log('userInfo->', userInfo)
+    // console.log('userInfo->', userInfo);
+    const userId = userInfo.id;
+    const userNick = userInfo.kakao_account.profile.nickname;
+    console.log('userId-->',userId);
+    console.log('userNick-->',userNick);
+    const from = 'kakao'
+    const user = new User({ userId, userNick, from})
+    console.log('user-->',user);
+    await user.save();
+
 });
 
 

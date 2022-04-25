@@ -65,8 +65,9 @@ router.post("/register", async (req, res) => {
         
         // bcrypt module -> 암호화
         // 10 --> saltOrRound --> salt를 10번 실행 (높을수록 강력)
+        const from = 'webSite'
         const hashed = await bcrypt.hash(userPw,10);
-        const user = new User({ userId, userNick, userPw : hashed})
+        const user = new User({ userId, userNick, userPw : hashed, from})
         console.log('user-->',user);
         await user.save();
 

@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
   userLose : {
     type : Number
   },
-  provider:{
+  from:{
     type: String
   }
 });
