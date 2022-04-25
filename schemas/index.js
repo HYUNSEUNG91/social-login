@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const connect = () => {
     mongoose
       .connect(
-        "mongodb://localhost:27017/mapiaGame",
+        "mongodb://localhost:27017/Game",
         // 이후 배포 시 변경 필요.
         { ignoreUndefined: true }
       )
