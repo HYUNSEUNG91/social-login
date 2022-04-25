@@ -18,7 +18,7 @@ router.get('/kakao',(req,res)=>{
 
 router.get('/kakaoLogin', async (req,res) => {
     const { code } = req.query;
-    console.log('code-->' , code);
+    // console.log('code-->' , code);
     const options = {
         url : "https://kauth.kakao.com/oauth/token",
         method : 'POST',
@@ -48,8 +48,8 @@ router.get('/kakaoLogin', async (req,res) => {
     // console.log('userInfo->', userInfo);
     const userId = userInfo.id;
     const userNick = userInfo.kakao_account.profile.nickname;
-    console.log('userId-->',userId);
-    console.log('userNick-->',userNick);
+    // console.log('userId-->',userId);
+    // console.log('userNick-->',userNick);
     const from = 'kakao'
     const user = new User({ userId, userNick, from})
     console.log('user-->',user);
