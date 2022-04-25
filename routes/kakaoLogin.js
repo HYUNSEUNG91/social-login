@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-// const{ clientid } = process.env.clientid;
 const dotenv = require("dotenv").config();
 const rp = require('request-promise');
 const User = require("../schemas/user");
@@ -18,7 +17,7 @@ router.get('/kakao',(req,res)=>{
 });
 
 // kakao register
-router.get('/kakaoLogin', async (req,res) => {
+router.get('/main', async (req,res) => {
     const { code } = req.query;
     // console.log('code-->' , code);
     const options = {

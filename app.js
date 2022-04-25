@@ -16,7 +16,8 @@ const kakaoRouter = require('./routes/kakaoLogin');
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/user', [usersRouter, resisterRouter, kakaoRouter]);
+app.use('/user', [usersRouter, resisterRouter]);
+app.use('', [kakaoRouter] )
 
 
 app.get("/", async (req, res) => {
