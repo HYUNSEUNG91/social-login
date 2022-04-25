@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 
 const kakao = {
     clientid: `${process.env.CLIENTID}`, //REST API
-    redirectUri	: 'http://3.36.75.6'
+    redirectUri	: 'http://3.36.75.6/'
 }
 // kakao login page URL
 router.get('/kakao',(req,res)=>{
