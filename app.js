@@ -12,11 +12,13 @@ app.use(cors());
 const usersRouter = require("./routes/login");
 const resisterRouter = require("./routes/register");
 const kakaoRouter = require('./routes/kakaoLogin');
+const findPwRouter = require('./routes/findPw')
+const changePwRouter = require('./routes/changePw')
 
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/user', [usersRouter, resisterRouter]);
+app.use('/user', [ usersRouter, resisterRouter, findPwRouter, changePwRouter ]);
 app.use('', [kakaoRouter] )
 
 

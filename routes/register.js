@@ -3,26 +3,41 @@ const User = require("../schemas/user");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 
-// register
+// register --> email 정규식 추가(04.25) ->findPw
 router.post("/register", async (req, res) => {
     console.log('user/register')
 
-        const {userId, userPw, userPwCheck, userNick } = req.body;
+        const {userId, email, userPw, userPwCheck, userNick } = req.body;
         console.log('register-->', req.body);
 
         // Validation Check
         var userNickReg = /^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{1,15}$/ //2~15자 한글,영문,숫자
-        // var userIdReg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+        var emailReg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
         var userPwReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,15}$/; //4~15자 영문+숫자
         
         // signup -> userId, userName 중복검사
         const existUsers = await User.find({
-            $or: [ {userId}, {userNick} ],
+            $or: [ {userId}, {userNick}, {email} ],
         });
 
         if(userId == "" || userId == undefined || userId == null){
             res.status(400).send({
                 errorMessage : '아이디를 입력하세요.'
+            });
+            return;
+        }else if(!userPwReg.test(userId)){
+            res.status(400).send({
+                errorMessage : '아이디는 4~15자 영문 및 숫자만 가능합니다.'
+            });
+            return;
+        }else if(email == "" || email == undefined || email == null){
+            res.status(400).send({
+                errorMessage : '이메일을 입력하세요.'
+            });
+            return;
+        }else if(!emailReg.test(email)){
+            res.status(400).send({
+                errorMessage : '이메일 형식을 올바르게 입력해주세요.'
             });
             return;
         }else if(userNick == "" || userNick == undefined || userNick == null){
@@ -37,7 +52,7 @@ router.post("/register", async (req, res) => {
             return;
         }else if(existUsers.length) {
             res.status(400).send({
-                errorMessage : '이미 가입된 아이디 또는 닉네임 입니다.'
+                errorMessage : '이미 가입된 아이디,닉네임 또는 이메일 입니다.'
             });
             return;
         }else if(userPw == "" || userPw == undefined || userPw == null){
@@ -67,7 +82,7 @@ router.post("/register", async (req, res) => {
         // 10 --> saltOrRound --> salt를 10번 실행 (높을수록 강력)
         const from = 'webSite'
         const hashed = await bcrypt.hash(userPw,10);
-        const user = new User({ userId, userNick, userPw : hashed, from})
+        const user = new User({ userId, email, userNick, userPw : hashed, from})
         console.log('user-->',user);
         await user.save();
 
