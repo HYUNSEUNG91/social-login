@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const dotenv = require("dotenv").config();
 const rp = require('request-promise');
-const User = require("../schemas/user");
+const User = require("../../schemas/user");
 const jwt = require("jsonwebtoken");
 
 

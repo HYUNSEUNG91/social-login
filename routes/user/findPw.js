@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require("../schemas/user");
+const User = require("../../schemas/user");
 const nodemailer = require('nodemailer');
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config();
