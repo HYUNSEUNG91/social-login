@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Game = require("../../schemas/game");
 
-// skill logic
+// result logic
 
 
 // user job 부여
@@ -114,14 +114,25 @@ router.post('/room/rull/:gameNo', async (req, res) => {
         const citizenSelect = userSelect[1].citizen;
         const userArr = await Game.find({gameNo})
         const player = userArr[0].player
-
+        var citizenCnt = 0;
+        var mapiaCnt = 0;
+        var gameResult ="";
             for (var i=0; i<player.length; i++) {
                 var _player = Object.keys(player[i])
                 if(citizenSelect == _player[0] ){
                     player[i].userLife = 'die'
                 }
                 // console.log('day player--> ', player[i])
+                if(player[i].userLife == 'save') {
+
+                    if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'){
+                        citizenCnt++;
+                        console.log('citizenCnt-->',citizenCnt)
+                    }
+                }
             }
+
+            
         const gameInfo = await Game.updateOne({gameNo}, {player:player})
         console.log('result-->', player)
         console.log('gamaInfo', gameInfo)
