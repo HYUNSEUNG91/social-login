@@ -68,9 +68,10 @@ router.post('/room/:roomNo', async (req, res) => {
     }); 
 });
 
+// 밤, 낮 통신
 router.post('/room/rull/:gameNo', async (req, res) => {
     const userSelect = req.body;
-    console.log('0', userSelect)
+    // console.log('0', userSelect)
     const gameNo = userSelect[0].gameNo
 
     //밤 (mapia, doctor, police)
@@ -99,8 +100,27 @@ router.post('/room/rull/:gameNo', async (req, res) => {
                 player[i]['userLife'] = 'save'
             }
         }
-            // console.log('night player-->', player)
 
+        //승리 조건
+        for(var i=0; i<player.length; i++){
+            if(player[i].userLife == 'save') {
+                if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'){
+                    var citizenCnt = 0;
+                    citizenCnt++;
+                }else if(player[i].job == 'mapia'){
+                    var mapiaCnt = 0;
+                    mapiaCnt++;
+                }
+                console.log('citizenCnt-->',citizenCnt);
+                console.log('mapiaCnt-->', mapiaCnt)
+            }
+        }
+        if(citizenCnt == mapiaCnt || citizenCnt <= mapiaCnt){
+            res.status(200).send({
+                msg : 'gameover 늑대 승리~'
+            })
+            return;
+        }
         const gameInfo = await Game.updateOne({gameNo}, {player:player})
         console.log('result-->', player)
         console.log('gamaInfo', gameInfo)
@@ -114,24 +134,33 @@ router.post('/room/rull/:gameNo', async (req, res) => {
         const citizenSelect = userSelect[1].citizen;
         const userArr = await Game.find({gameNo})
         const player = userArr[0].player
-        var citizenCnt = 0;
-        var mapiaCnt = 0;
-        var gameResult ="";
             for (var i=0; i<player.length; i++) {
                 var _player = Object.keys(player[i])
                 if(citizenSelect == _player[0] ){
                     player[i].userLife = 'die'
                 }
                 // console.log('day player--> ', player[i])
+            }
+            // 승패 판별
+            for(var i=0; i<player.length; i++){
                 if(player[i].userLife == 'save') {
-
                     if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'){
+                        var citizenCnt = 0;
                         citizenCnt++;
-                        console.log('citizenCnt-->',citizenCnt)
+                    }else if(player[i].job == 'mapia'){
+                        var mapiaCnt = 0;
+                        mapiaCnt++;
                     }
+                    console.log('citizenCnt-->',citizenCnt);
+                    console.log('mapiaCnt-->', mapiaCnt)
                 }
             }
-
+            if(mapiaCnt == undefined || mapiaCnt == 0) {
+                res.status(200).send({
+                    msg : 'gameover 양 승리~'
+                })
+                return;
+            }
             
         const gameInfo = await Game.updateOne({gameNo}, {player:player})
         console.log('result-->', player)
