@@ -76,6 +76,7 @@ router.post('/room/rull/:gameNo', async (req, res) => {
     const userSelect = req.body;
     // console.log('0', userSelect)
     const gameNo = userSelect[0].gameNo
+    var msg='';
 
     //밤 (mapia, doctor, police)
     if(userSelect[1].citizen == undefined || userSelect[1].citizen == null){
@@ -101,9 +102,11 @@ router.post('/room/rull/:gameNo', async (req, res) => {
                 if(player[i].userLife == 'save') {
                     if(mapiaSelect == doctorSelect){
                         player[i]['userLife'] = 'save'
+                        msg = '아무일도 일어나지 않았스...';
                     }else if(mapiaSelect == _player[0]){
                         player[i]['userLife'] = 'die'
                         console.log('mapiasel', player[i])
+                        msg = '늑대가가 양을 죽였스...';
                         // console.log(player[i])
                     }else if(doctorSelect == _player[0]){
                         player[i]['userLife'] = 'save'
@@ -125,8 +128,8 @@ router.post('/room/rull/:gameNo', async (req, res) => {
                 if(player[i].job == 'mapia'){
                     mapiaCnt++
                 }
-                console.log('citizenCnt-->',citizenCnt);
-                console.log('mapiaCnt-->', mapiaCnt)
+                // console.log('citizenCnt-->',citizenCnt);
+                // console.log('mapiaCnt-->', mapiaCnt)
             }
         }
         if(citizenCnt == mapiaCnt || citizenCnt <= mapiaCnt){
@@ -159,37 +162,49 @@ router.post('/room/rull/:gameNo', async (req, res) => {
         console.log('gamaInfo', gameInfo)
         
         res.status(200).send({
-            msg : 'hmm.....',
+            msg,
             gameInfo
         }); 
         }
     // 낮 --> citizen 투표
     }else if(userSelect[1].citizen !== undefined || userSelect[1].citizen !== null){
+        console.log('dayVote')
         const citizenSelect = userSelect[1].citizen;
         const userArr = await Game.find({gameNo})
         const player = userArr[0].player
             for (var i=0; i<player.length; i++) {
                 var _player = Object.keys(player[i])
+                console.log('2313', _player)
                 if(citizenSelect == _player[0] ){
+                    msg = '';
                     player[i].userLife = 'die'
+                    // console.log('ppp', player[i].job)
+                    if(player[i].job == 'mapia'){
+                        msg = '마피아를 검거하였스...'
+                    }
+                    if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'){
+                        msg = '선량한 시민이 죽어버렸스...'
+                    }
+                    
                 }
+                // 시민이 마피아 검거 또는 시민 죽였는지 확인하는 코드 작성할 것.
                 // console.log('day player--> ', player[i])
             }
             // 승패 판별
+            var citizenCnt = 0;
+            var mapiaCnt = 0;
             for(var i=0; i<player.length; i++){
                 if(player[i].userLife == 'save') {
                     if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'){
-                        var citizenCnt = 0;
                         citizenCnt++;
                     }else if(player[i].job == 'mapia'){
-                        var mapiaCnt = 0;
                         mapiaCnt++;
                     }
-                    console.log('citizenCnt-->',citizenCnt);
-                    console.log('mapiaCnt-->', mapiaCnt)
+                    // console.log('citizenCnt-->',citizenCnt);
+                    // console.log('mapiaCnt-->', mapiaCnt)
                 }
             }
-            if(mapiaCnt == undefined || mapiaCnt == 0) {
+            if(mapiaCnt == undefined || mapiaCnt == 0 || mapiaCnt >= citizenCnt) {
 
                 for (var i=0; i<player.length; i++) {
                     // console.log('play[i]-->', player[i])
@@ -217,7 +232,7 @@ router.post('/room/rull/:gameNo', async (req, res) => {
         console.log('gamaInfo', gameInfo)
         
         res.status(200).send({
-            msg : 'citizen...',
+            msg,
             gameInfo
         }); 
     }
