@@ -116,7 +116,23 @@ router.post('/room/rull/:gameNo', async (req, res) => {
             }
         }
         if(citizenCnt == mapiaCnt || citizenCnt <= mapiaCnt){
+
+            for (var i=0; i<player.length; i++) {
+                // console.log('play[i]-->', player[i])
+                // if(userSelcet.mapia == player)
+                var _player = Object.keys(player[i])
+                // console.log('_player-->', _player)
+                if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'  ){
+                    player[i]['result'] = 'lose'
+                }else if(player[i].job == 'mapia' ){
+                    player[i]['result'] = 'win'
+                    // console.log(player[i])
+                }
+            }
+            const gameInfo = await Game.updateOne({gameNo}, {player:player})
+            console.log('result-->', player)
             res.status(200).send({
+                gameInfo,
                 msg : 'gameover 늑대 승리~'
             })
             return;
@@ -129,7 +145,7 @@ router.post('/room/rull/:gameNo', async (req, res) => {
             msg : 'hmm.....',
             gameInfo
         }); 
-
+    // 낮 --> citizen 투표
     }else if(userSelect[1].citizen !== undefined || userSelect[1].citizen !== null){
         const citizenSelect = userSelect[1].citizen;
         const userArr = await Game.find({gameNo})
@@ -156,7 +172,23 @@ router.post('/room/rull/:gameNo', async (req, res) => {
                 }
             }
             if(mapiaCnt == undefined || mapiaCnt == 0) {
+
+                for (var i=0; i<player.length; i++) {
+                    // console.log('play[i]-->', player[i])
+                    // if(userSelcet.mapia == player)
+                    var _player = Object.keys(player[i])
+                    // console.log('_player-->', _player)
+                    if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'  ){
+                        player[i]['result'] = 'win'
+                    }else if(player[i].job == 'mapia' ){
+                        player[i]['result'] = 'lose'
+                        // console.log(player[i])
+                    }
+                }
+                const gameInfo = await Game.updateOne({gameNo}, {player:player})
+                console.log('result-->', player)
                 res.status(200).send({
+                    gameInfo,
                     msg : 'gameover 양 승리~'
                 })
                 return;
