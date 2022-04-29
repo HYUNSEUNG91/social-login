@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Game = require("../../schemas/game");
 
-// result logic
-
-
 // user job 부여
 router.post('/room/:roomNo', async (req, res) => {
     // 화면에서 정보 받아옴
@@ -185,9 +182,7 @@ router.post('/room/rull/:gameNo', async (req, res) => {
                     if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'){
                         msg = '선량한 시민이 죽어버렸스...'
                     }
-                    
                 }
-                // 시민이 마피아 검거 또는 시민 죽였는지 확인하는 코드 작성할 것.
                 // console.log('day player--> ', player[i])
             }
             // 승패 판별
