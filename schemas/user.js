@@ -23,7 +23,9 @@ const userSchema = mongoose.Schema({
   },
   from:{
     type: String
-  }
+  },
+  friendList : []
+
 });
 
 module.exports = mongoose.model("User", userSchema);

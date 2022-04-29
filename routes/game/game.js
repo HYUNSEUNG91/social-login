@@ -71,9 +71,10 @@ router.post('/room/:roomNo', async (req, res) => {
 // 밤, 낮 통신
 router.post('/room/rull/:gameNo', async (req, res) => {
     const userSelect = req.body;
-    // console.log('0', userSelect)
+    console.log('0', userSelect)
     const gameNo = userSelect[0].gameNo
     var msg='';
+    var poilceMsg = '';
 
     //밤 (mapia, doctor, police)
     if(userSelect[1].citizen == undefined || userSelect[1].citizen == null){
@@ -82,6 +83,8 @@ router.post('/room/rull/:gameNo', async (req, res) => {
         console.log('mapiaSelect-->', mapiaSelect)
         const doctorSelect = userSelect[1].doctor;
         console.log('doctorSelect-->', doctorSelect)
+        const policeSelect = userSelect[1].police;
+        console.log('policeSelect-->', policeSelect)
 
         const userArr = await Game.find({gameNo})
         // console.log('userArr-->', userArr)
@@ -94,19 +97,30 @@ router.post('/room/rull/:gameNo', async (req, res) => {
             // if(userSelcet.mapia == player)
             // console.log('_player-->', _player)
             for(var i=0; i<player.length; i++){
-                var _player = Object.keys(player[i])
-                console.log(_player)
+                var _playerValue = Object.values(player[i])
+                console.log(_playerValue)
                 if(player[i].userLife == 'save') {
                     if(mapiaSelect == doctorSelect){
                         player[i]['userLife'] = 'save'
                         msg = '아무일도 일어나지 않았스...';
-                    }else if(mapiaSelect == _player[0]){
+                    }
+                    if(mapiaSelect == _playerValue[0]){
                         player[i]['userLife'] = 'die'
-                        console.log('mapiasel', player[i])
+                        // console.log('22',player[key])
+                        console.log('mapiasel', _playerValue[0])
                         msg = '늑대가가 양을 죽였스...';
                         // console.log(player[i])
-                    }else if(doctorSelect == _player[0]){
+                    }
+                    if(doctorSelect == _playerValue[0]){
                         player[i]['userLife'] = 'save'
+                    }
+                    if(policeSelect == _playerValue[0]){
+                        if(player[i].job == 'mapia'){
+                            console.log('info',_playerValue[0])
+                            poilceMsg = _playerValue[0]+'님은 늑대 입니다.'
+                        }else{
+                            poilceMsg = _playerValue[0]+'님은 늑대가 아닙니다.'
+                        }
                     }
                     }
             }
@@ -131,11 +145,12 @@ router.post('/room/rull/:gameNo', async (req, res) => {
         }
         if(citizenCnt == mapiaCnt || citizenCnt <= mapiaCnt){
             console.log("win or lose")
+            console.log('mapiaCnt-->', mapiaCnt)
+            console.log('citizenCnt-->', citizenCnt)
 
             for (var i=0; i<player.length; i++) {
                 // console.log('play[i]-->', player[i])
                 // if(userSelcet.mapia == player)
-                var _player = Object.keys(player[i])
                 // console.log('_player-->', _player)
                 if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'  ){
                     player[i]['result'] = 'lose'
@@ -160,6 +175,7 @@ router.post('/room/rull/:gameNo', async (req, res) => {
         
         res.status(200).send({
             msg,
+            poilceMsg,
             gameInfo
         }); 
         }
@@ -170,17 +186,17 @@ router.post('/room/rull/:gameNo', async (req, res) => {
         const userArr = await Game.find({gameNo})
         const player = userArr[0].player
             for (var i=0; i<player.length; i++) {
-                var _player = Object.keys(player[i])
-                console.log('2313', _player)
-                if(citizenSelect == _player[0] ){
+                var _playerValue = Object.values(player[i])
+                console.log('_value->', _playerValue)
+                if(citizenSelect == _playerValue[0] ){
                     msg = '';
                     player[i].userLife = 'die'
                     // console.log('ppp', player[i].job)
                     if(player[i].job == 'mapia'){
-                        msg = '마피아를 검거하였스...'
+                        msg = '마피아 '+_playerValue[0]+'를 검거하였스...'
                     }
                     if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'){
-                        msg = '선량한 시민이 죽어버렸스...'
+                        msg = '선량한 시민 '+_playerValue[0]+'가 죽어버렸스...'
                     }
                 }
                 // console.log('day player--> ', player[i])
@@ -200,11 +216,13 @@ router.post('/room/rull/:gameNo', async (req, res) => {
                 }
             }
             if(mapiaCnt == undefined || mapiaCnt == 0 || mapiaCnt >= citizenCnt) {
+                console.log("win or lose")
+                console.log('mapiaCnt-->', mapiaCnt)
+                console.log('citizenCnt-->', citizenCnt)
 
                 for (var i=0; i<player.length; i++) {
                     // console.log('play[i]-->', player[i])
                     // if(userSelcet.mapia == player)
-                    var _player = Object.keys(player[i])
                     // console.log('_player-->', _player)
                     if(player[i].job == 'citizen' || player[i].job == 'doctor' || player[i].job == 'police'  ){
                         player[i]['result'] = 'win'
