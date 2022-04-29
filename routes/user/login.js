@@ -40,7 +40,7 @@ router.get("/loginCheck", authMiddleWare, (req, res) => {
     const { user } = res.locals;
     console.log('loginCheck user-->',user);
     const userId = user[0].userId;
-    const userNick = user[0].userNick;
+    const userNick = user[0].userNick; 
     console.log('userId-->',userId);
     console.log('userNick-->',userNick);
     res.status(200).send({
