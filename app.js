@@ -9,20 +9,22 @@ connect();
 // cors
 app.use(cors());
 
-// router
+// router -> user
 const usersRouter = require("./routes/user/login");
 const resisterRouter = require("./routes/user/register");
 const kakaoRouter = require('./routes/user/kakaoLogin');
-const findPwRouter = require('./routes/user/findPw')
-const changePwRouter = require('./routes/user/changePw')
-const gameRouter = require('./routes/game/game')
+const findPwRouter = require('./routes/user/findPw');
+const changePwRouter = require('./routes/user/changePw');
+const freindListRouter = require('./routes/user/friendList')
+// router -> game
+const gameRouter = require('./routes/game/game');
 
 //middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extends: true })) 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/user', [ usersRouter, resisterRouter, findPwRouter, changePwRouter ]);
+app.use('/user', [ usersRouter, resisterRouter, findPwRouter, changePwRouter, freindListRouter ]);
 app.use('', [kakaoRouter] )
 app.use('/game', [gameRouter] )
 

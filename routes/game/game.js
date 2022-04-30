@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Game = require("../../schemas/game");
+const User = require("../../schemas/user");
 
 // user job 부여
 router.post('/room/:roomNo', async (req, res) => {
@@ -68,7 +69,7 @@ router.post('/room/:roomNo', async (req, res) => {
     }); 
 });
 
-// 밤, 낮 통신
+// 밤, 낮 통신 --> userWin, userLose User정보에 count 추가할 것.
 router.post('/room/rull/:gameNo', async (req, res) => {
     const userSelect = req.body;
     console.log('0', userSelect)
@@ -157,7 +158,6 @@ router.post('/room/rull/:gameNo', async (req, res) => {
                 }
                 if(player[i].job == 'mapia' ){
                     player[i]['result'] = 'win'
-                    // console.log(player[i])
                 }
             }
             const gameInfo = await Game.updateOne({gameNo}, {player:player})
@@ -187,7 +187,6 @@ router.post('/room/rull/:gameNo', async (req, res) => {
         const player = userArr[0].player
             for (var i=0; i<player.length; i++) {
                 var _playerValue = Object.values(player[i])
-                console.log('_value->', _playerValue)
                 if(citizenSelect == _playerValue[0] ){
                     msg = '';
                     player[i].userLife = 'die'
