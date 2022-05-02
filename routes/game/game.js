@@ -6,7 +6,7 @@ const User = require("../../schemas/user");
 // user job 부여
 router.post('/room/:roomNo', async (req, res) => {
     // 화면에서 정보 받아옴
-    const userArr = req.body
+    const userArr = req.body;
     // console.log('user-->', userArr) // [{player_1 : ""}, ---]
     // console.log(userArr.length)
     // 각 user 직업 부여
