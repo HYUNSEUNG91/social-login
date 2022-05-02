@@ -29,10 +29,10 @@ app.use('', [kakaoRouter] )
 app.use('/game', [gameRouter] )
 
 
-// app.get("/", async (req, res) => {
-//  console.log("main_page")    
-//  res.sendFile(__dirname + "/index.html");
-// });
+app.get("/", async (req, res) => {
+ console.log("main_page")    
+ res.sendFile(__dirname + "/index.html");
+});
 
 
 
