@@ -1,4 +1,4 @@
 /node_modules
 /.env
-/.index.html
-/.friendList.js
+/index.html
+/webCam.js
