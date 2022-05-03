@@ -16,10 +16,10 @@ router.post('/friendAdd', authMiddleWare, async (req, res) => {
     const loginUser = user[0].userId
     console.log('loginUser->', loginUser)
 
-    const loginUserInfo = await User.find({userId : loginUser});
+    // const loginUserInfo = await User.find({userId : loginUser});
     // console.log('loginUserInfo-->', loginUserInfo);
-    const saveFriendList = loginUserInfo[0].friendList;
-    console.log('saveFriendList->',saveFriendList);
+    // const saveFriendList = loginUserInfo[0].friendList;
+    // console.log('saveFriendList->',saveFriendList);
 
     // 친구추가 중복검사
     var msg = '';
@@ -45,10 +45,19 @@ router.post('/friendAdd', authMiddleWare, async (req, res) => {
     });
 });
 
+//친구목록 조회
 router.post('/friendList', authMiddleWare, async (req, res) => {
-    const { userId } = req.locals;
-    console.log( 'loginUser->', userId );
-
+    console.log('user/friendList router');
+    const { user } = res.locals;
+    // console.log( 'user->', user );
+    const userId = user[0].userId
+    // console.log(userId)
+    const userInfo = await User.find({userId : userId});
+    const friendList = userInfo[0].friendList;
+    console.log('friendList-> ', friendList);
+    res.status(200).send({
+        friendList
+    })
 });
 
 module.exports = router;
