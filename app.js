@@ -1,22 +1,20 @@
 const express = require("express");
 const app = express();
 const port = 3000;
-
-// const http = require('http')
-// const https = require('https');
-// const fs = require('fs');
-// const http_port = 3000;
-// const https_port = 8443;
-
+const https = require('https');
+const fs = require('fs');
 const connect = require("./schemas");
 const bodyParser = require('body-parser')
 const cors = require("cors");
 connect();
 
-// const options = {
-//   key: fs.readFileSync(__dirname+'/private.pem', 'utf-8'),
-//   cert: fs.readFileSync(__dirname+'/public.pem', 'utf-8')
-// };
+const options = {
+    key: fs.readFileSync('./server.key'),
+    cert: fs.readFileSync('./server.crt'),
+    ca: fs.readFileSync('./server.csr'),
+};
+
+const server = https.createServer( options, app );
 
 
 // cors
@@ -53,7 +51,7 @@ app.get("/", async (req, res) => {
 
 
 //서버 열기
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(port, "포트로 서버가 켜졌어요!");
   });
 // http.createServer(app).listen(http_port);
