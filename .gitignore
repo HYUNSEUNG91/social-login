@@ -2,3 +2,6 @@
 /.env
 /index.html
 /webCam.js
+/sever.crt
+/sever.csr
+/sever.key
