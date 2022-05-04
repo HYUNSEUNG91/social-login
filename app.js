@@ -1,8 +1,12 @@
 const express = require("express");
 const app = express();
+const app_low = express();
+const httpPort = 80;
+const httpsPort = 443;
 const port = 3000;
-// const https = require('https');
-// const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const connect = require("./schemas");
 const bodyParser = require('body-parser')
 const cors = require("cors");
@@ -53,6 +57,17 @@ app.get(
   }
 );
 
+//https 리다이렉트
+app_low.use( (req, res, next ) => {
+  if(req.secure) {
+    next();
+  } else {
+    const to = `https://${req.hostname}:${httpsPort}${req.url}`;
+    console.log('to->', to);
+    res.redirect(to);
+  }
+})
+
 app.get("/", async (req, res) => {
  console.log("main_page")    
  res.sendFile(__dirname + "/index.html");
@@ -65,8 +80,13 @@ app.get("/", async (req, res) => {
 app.listen(port, () => {
     console.log(port, "포트로 서버가 켜졌어요!");
   });
-// http.createServer(app).listen(http_port);
-// https.createServer(options, app).listen(https_port);
+
+// http.createServer(app_low).listen(httpPort, () => {
+//   console.log('http서버 on')
+// });
+// https.createServer(options, app).listen(httpsPort, () => {
+//   console.log('https서버 on')
+// });
 
   
 module.exports = app
