@@ -58,15 +58,15 @@ app.get(
 );
 
 //https 리다이렉트
-app_low.use( (req, res, next ) => {
-  if(req.secure) {
-    next();
-  } else {
-    const to = `https://${req.hostname}:${httpsPort}${req.url}`;
-    console.log('to->', to);
-    res.redirect(to);
-  }
-})
+// app_low.use( (req, res, next ) => {
+//   if(req.secure) {
+//     next();
+//   } else {
+//     const to = `https://${req.hostname}:${httpsPort}${req.url}`;
+//     console.log('to->', to);
+//     res.redirect(to);
+//   }
+// })
 
 app.get("/", async (req, res) => {
  console.log("main_page")    
