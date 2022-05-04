@@ -12,13 +12,14 @@ const bodyParser = require('body-parser')
 const cors = require("cors");
 connect();
 
-// const options = {
-//     key: fs.readFileSync('./server.key'),
-//     cert: fs.readFileSync('./server.crt'),
-//     ca: fs.readFileSync('./server.csr'),
-// };
-
-// const server = https.createServer( options, app );
+const privateKey = fs.readFileSync(__dirname + "/private.key", "utf8");
+const certificate = fs.readFileSync(__dirname + "/certificate.crt", "utf8");
+const ca = fs.readFileSync(__dirname + "/ca_bundle.crt", "utf8");
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: ca,
+};
 
 
 // cors
@@ -58,15 +59,15 @@ app.get(
 );
 
 //https 리다이렉트
-// app_low.use( (req, res, next ) => {
-//   if(req.secure) {
-//     next();
-//   } else {
-//     const to = `https://${req.hostname}:${httpsPort}${req.url}`;
-//     console.log('to->', to);
-//     res.redirect(to);
-//   }
-// })
+app_low.use( (req, res, next ) => {
+  if(req.secure) {
+    next();
+  } else {
+    const to = `https://${req.hostname}:${httpsPort}${req.url}`;
+    console.log('to->', to);
+    res.redirect(to);
+  }
+})
 
 app.get("/", async (req, res) => {
  console.log("main_page")    
@@ -77,16 +78,16 @@ app.get("/", async (req, res) => {
 
 
 //서버 열기
-app.listen(port, () => {
-    console.log(port, "포트로 서버가 켜졌어요!");
-  });
+// app.listen(port, () => {
+//     console.log(port, "포트로 서버가 켜졌어요!");
+//   });
 
-// http.createServer(app_low).listen(httpPort, () => {
-//   console.log('http서버 on')
-// });
-// https.createServer(options, app).listen(httpsPort, () => {
-//   console.log('https서버 on')
-// });
+http.createServer(app_low).listen(httpPort, () => {
+  console.log('http서버 on')
+});
+https.createServer(credentials, app).listen(httpsPort, () => {
+  console.log('https서버 on')
+});
 
   
 module.exports = app
