@@ -48,11 +48,11 @@ app.use('/cam', [webcamRouter] );
 
 //인증
 app.get(
-  "/.well-known/pki-validation/976C215CDA34EDF1D9A9F4F24AC439E5.txt",
+  "./.well-known/pki-validation/976C215CDA34EDF1D9A9F4F24AC439E5.txt",
   (req, res) => {
     res.sendFile(
       __dirname + 
-      "/.well-known/pki-validation/976C215CDA34EDF1D9A9F4F24AC439E5.txt"
+      "./.well-known/pki-validation/976C215CDA34EDF1D9A9F4F24AC439E5.txt"
     );
   }
 );
